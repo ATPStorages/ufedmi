@@ -41,4 +41,36 @@ private
       Convention => C,
       Link_Name => "memcpy";
 
+   procedure Overflow_Check
+      (File : Address;
+       Line : Integer)
+   with
+      Export,
+      Convention => C,
+      Link_Name => "__gnat_rcheck_CE_Overflow_Check";
+
+   procedure Range_Check
+      (File : Address;
+       Line : Integer)
+   with
+      Export,
+      Convention => C,
+      Link_Name => "__gnat_rcheck_CE_Range_Check";
+
+   procedure Index_Check
+      (File : Address;
+       Line : Integer)
+   with
+      Export,
+      Convention => C,
+      Link_Name => "__gnat_rcheck_CE_Index_Check";
+
+   procedure Length_Check
+      (File : Address;
+       Line : Integer)
+   with
+      Export,
+      Convention => C,
+      Link_Name => "__gnat_rcheck_CE_Length_Check";
+
 end System;

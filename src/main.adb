@@ -1,19 +1,6 @@
 with System.Storage_Elements;
 
 procedure Main is
-   --  Suppress some checks to prevent undefined references during linking to
-   --
-   --    __gnat_rcheck_CE_Range_Check
-   --    __gnat_rcheck_CE_Overflow_Check
-   --
-   --  These are Ada Runtime functions (see also GNAT's a-except.adb).
-
-   pragma Suppress (All_Checks);
-
-
-   --  See also:
-   --    https://en.wikipedia.org/wiki/VGA-compatible_text_mode
-   --    https://en.wikipedia.org/wiki/Color_Graphics_Adapter#Color_palette
 
    type Color is (BLACK, BRIGHT);
 
@@ -94,6 +81,6 @@ begin
    Put_String (1, 3, BLACK, BRIGHT, "---------------------------------------");
    while (True) loop
       I := I + 1;
-      Put_String (1, 2, BRIGHT, BLACK, I'Address'Image);
+      Put_String (1, 2, BRIGHT, BLACK, Clear'Address'Image);
    end loop;
 end Main;

@@ -21,8 +21,6 @@ with Common_Base_Mappings;
 
 package body System.Img_Int is
 
-   pragma Suppress (All_Checks);
-
    Mapping : Common_Base_Mappings.Inclusive_String
       renames Common_Base_Mappings.Mapping;
 
