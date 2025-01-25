@@ -1,0 +1,38 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "ada",
+			"compound": [
+				"Build main - src/ufedmi_k.adb",
+				"Run main - src/ufedmi_k.adb"
+			],
+			"problemMatcher": [
+				""
+			],
+			"label": "ada: Build and run main - src/ufedmi_k.adb"
+		},
+		{
+			"type": "ada",
+			"command": "make",
+			"args": [
+				"clean",
+				"build"
+			],
+			"problemMatcher": [
+				"$ada"
+			],
+			"group": "build",
+			"label": "ada: Build main - src/ufedmi_k.adb"
+		},
+		{
+			"type": "ada",
+			"command": "make",
+			"args": [
+				"run"
+			],
+			"problemMatcher": [],
+			"label": "ada: Run main - src/ufedmi_k.adb"
+		}
+	]
+}

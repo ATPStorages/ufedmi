@@ -1,0 +1,34 @@
+library project Ufedmi_RTS is
+
+   for Source_Dirs use ("adainclude/");
+   for Object_Dir use "adaobj/";
+   for Create_Missing_Dirs use "True";
+
+   for Library_Dir use "adalib/";
+   for Library_Kind use "static";
+   for Library_Name use "gnat";
+
+   for Runtime ("Ada") use "build";
+
+   package Builder is
+      for Switches ("Ada") use (
+         "-c"
+      );
+   end Builder;
+
+   package Compiler is
+      for Switches ("Ada") use (
+         "-m32",
+         "-Wall",
+         "-Wextra",
+         
+         "-gnatg",
+         "-Os",
+         "-s",
+         "-nostdlib",
+         "-fno-ident",
+         "-fno-asynchronous-unwind-tables"
+      );
+   end Compiler;
+
+end Ufedmi_RTS;

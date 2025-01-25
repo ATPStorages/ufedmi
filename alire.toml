@@ -1,0 +1,12 @@
+name = "ufedmi_k"
+description = "Kernel for UFEDMI"
+version = "0.1.0-dev"
+
+authors = ["Miko Elbrecht"]
+maintainers = ["Miko Elbrecht <tcgytsc@gmail.com>"]
+maintainers-logins = ["ATPStorages"]
+licenses = "Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = []
+
+executables = ["ufedmi_k"]
