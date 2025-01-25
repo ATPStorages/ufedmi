@@ -94,6 +94,6 @@ begin
    Put_String (1, 3, BLACK, BRIGHT, "---------------------------------------");
    while (True) loop
       I := I + 1;
-      Put_String (1, 2, BRIGHT, BLACK, I'Image);
+      Put_String (1, 2, BRIGHT, BLACK, I'Address'Image);
    end loop;
 end Main;

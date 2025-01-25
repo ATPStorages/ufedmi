@@ -11,7 +11,8 @@ project Ufedmi_K is
 
    package Builder is
       for Switches ("Ada") use (
-         "-c"
+         "-c",
+         "-gnat2022"
       );
    end Builder;
 

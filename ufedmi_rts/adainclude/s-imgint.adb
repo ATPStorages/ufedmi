@@ -17,11 +17,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Common_Base_Mappings;
+
 package body System.Img_Int is
 
    pragma Suppress (All_Checks);
 
-   Mapping : constant array (0 .. 9) of Character := "0123456789";
+   Mapping : Common_Base_Mappings.Inclusive_String
+      renames Common_Base_Mappings.Mapping;
 
    procedure Image_Integer
      (Value        :        Integer;

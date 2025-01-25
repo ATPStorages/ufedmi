@@ -12,7 +12,8 @@ library project Ufedmi_RTS is
 
    package Builder is
       for Switches ("Ada") use (
-         "-c"
+         "-c",
+         "-gnat2022"
       );
    end Builder;
 
