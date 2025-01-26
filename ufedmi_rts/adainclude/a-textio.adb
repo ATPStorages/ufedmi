@@ -9,7 +9,7 @@ package body Ada.Text_IO is
 
    procedure Put (Line : String) is
    begin
-      Put_String (BRIGHT, BLACK, Line);
+      Put_String (Str => Line);
    end Put;
 
 end Ada.Text_IO;

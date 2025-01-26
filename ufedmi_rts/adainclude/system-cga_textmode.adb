@@ -5,7 +5,7 @@ package body System.CGA_TextMode is
       X := 0;
       Y := Y + 1;
       if Y > ROWS then
-         Clear (BLACK);
+         Clear;
          Y := 0;
       end if;
    end New_Line;
@@ -14,15 +14,19 @@ package body System.CGA_TextMode is
    -- Put_Char --
    --------------
 
-   procedure Put_Char (Fg, Bg : Color; Ch : Character) is
+   procedure Put_Char
+      (Foreground : Color := Foreground_Color;
+       Background : Color := Background_Color;
+       Char : Character)
+   is
    begin
-      if Ch = ASCII.LF or else Y = ROWS then
+      if Char = ASCII.LF or else Y = ROWS then
          New_Line;
-         if Ch = ASCII.LF then
+         if Char = ASCII.LF then
             return;
          end if;
       end if;
-      Output (Y * COLS + X) := (Ch, Fg, Bg);
+      Output (Y * COLS + X) := (Char, Foreground, Background);
       X := X + 1;
       if X = COLS then
          New_Line;
@@ -33,10 +37,14 @@ package body System.CGA_TextMode is
    -- Put_String --
    ----------------
 
-   procedure Put_String (Fg, Bg : Color; S : String) is
+   procedure Put_String
+      (Foreground : Color := Foreground_Color;
+       Background : Color := Background_Color;
+       Str : String)
+   is
    begin
-      for I in S'Range loop
-         Put_Char (Fg, Bg, S (I));
+      for I in Str'Range loop
+         Put_Char (Foreground, Background, Str (I));
       end loop;
    end Put_String;
 
@@ -44,11 +52,12 @@ package body System.CGA_TextMode is
    -- Clear --
    -----------
 
-   procedure Clear (Bg : Color) is
+   procedure Clear (Background : Color := Background_Color)
+   is
    begin
       for C in Col'Range loop
          for R in Row'Range loop
-            Output (R * COLS + C) := (' ', Bg, Bg);
+            Output (R * COLS + C) := (' ', Background, Background);
          end loop;
       end loop;
       X := 0;
