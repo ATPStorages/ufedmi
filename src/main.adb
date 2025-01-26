@@ -1,3 +1,4 @@
+with System.Low_Level;
 with System.Storage_Elements;
 
 procedure Main is
@@ -79,8 +80,11 @@ begin
    Put_String (1, 1, BLACK, BRIGHT, "Now running.                   Counter:");
    Put_String (1, 2, BLACK, BRIGHT, "                                       ");
    Put_String (1, 3, BLACK, BRIGHT, "---------------------------------------");
+
+   System.Low_Level.Disable_Interrupts;
+
    while (True) loop
       I := I + 1;
-      Put_String (1, 2, BRIGHT, BLACK, Clear'Address'Image);
+      Put_String (1, 2, BRIGHT, BLACK, System.Low_Level.A20_Line_Status'Image);
    end loop;
 end Main;

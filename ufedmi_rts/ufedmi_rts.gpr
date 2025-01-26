@@ -1,7 +1,7 @@
 library project Ufedmi_RTS is
 
    for Source_Dirs use ("adainclude/");
-   for Object_Dir use "adaobj/";
+   for Object_Dir use "adalib/obj/";
    for Create_Missing_Dirs use "True";
 
    for Library_Dir use "adalib/";
