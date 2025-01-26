@@ -1,6 +1,6 @@
 with System.Storage_Elements;
 
-with Interfaces; use Interfaces;
+with Ada.Text_IO; use Ada.Text_IO;
 with System.Low_Level; use System.Low_Level;
 
 procedure Main is
@@ -75,19 +75,8 @@ procedure Main is
          end loop;
       end loop;
    end Clear;
-
-   I : Unsigned_32 := 0;
 begin
    Clear (BLACK);
-   Put_String (1, 1, BLACK, BRIGHT, "Now running.                   Counter:");
-   Put_String (1, 2, BLACK, BRIGHT, "                                       ");
-   Put_String (1, 3, BLACK, BRIGHT, "---------------------------------------");
-
    Disable_Interrupts;
-
-   while (True) loop
-      I := I + 1;
-      Put_String (1, 2, BRIGHT, BLACK, I'Image);
-      delay 1.0;
-   end loop;
+   Put_Line ("This is a test");
 end Main;
