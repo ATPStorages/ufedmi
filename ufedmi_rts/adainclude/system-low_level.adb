@@ -5,6 +5,24 @@ package body System.Low_Level is
    HT : constant Character := Character'Val (9);
    LF : constant Character := Character'Val (10);
 
+   function Read_Pin (Pin : CPU_Pin) return Unsigned_16 is
+      Output : Unsigned_16 := 0;
+   begin
+      Asm ("inw %%dx, %%ax",
+           Inputs   => Unsigned_16'Asm_Input ("d", Pin'Enum_Rep),
+           Outputs  => Unsigned_16'Asm_Output ("=a", Output),
+           Volatile => True);
+      return Output;
+   end Read_Pin;
+
+   procedure Write_Pin (Pin : CPU_Pin; Value : Unsigned_16) is
+   begin
+      Asm ("outw %%ax, %%dx",
+           Inputs   => (Unsigned_16'Asm_Input ("a", Value),
+                        Unsigned_16'Asm_Input ("d", Pin'Enum_Rep)),
+           Volatile => True);
+   end Write_Pin;
+
    procedure Disable_Interrupts (Non_Maskable_Interrupts : Boolean := True) is
    begin
       Asm ("cli", Volatile => True);
@@ -29,12 +47,14 @@ package body System.Low_Level is
       end if;
    end Enable_Interrupts;
 
-   function A20_Line_Status return u2 is
-      Output : u2 := 0;
+   function A20_Line_Status return Unsigned_16 is
+      Output : constant Unsigned_16 := 1;
    begin
-      Asm ("mov %0, 0xFFDD",
-           Volatile => True,
-           Outputs => u2'Asm_Output ("=a", Output));
+      --  Asm ("xor %%dx, %%dx" & LF & HT &
+      --       "mov %%dx, %0",
+      --       Volatile => True,
+      --       Clobber  => "dx",
+      --       Outputs  => u2'Asm_Output ("=c", Output));
       return Output;
    end A20_Line_Status;
 

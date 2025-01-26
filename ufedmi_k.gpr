@@ -21,6 +21,7 @@ project Ufedmi_K is
          "-m32",
          "-Wall",
          "-Wextra",
+         "-gnatp",
          
          "-Os",
          "-s",

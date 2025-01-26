@@ -53,4 +53,14 @@ package body System is
       null;
    end Length_Check;
 
+   procedure Invalid_Check
+      (File : Address;
+       Line : Integer)
+   is
+      pragma Unreferenced (File);
+      pragma Unreferenced (Line);
+   begin
+      null;
+   end Invalid_Check;
+
 end System;

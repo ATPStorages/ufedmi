@@ -42,7 +42,7 @@ clean:
 	rm -rf $(OUT_DIR)/*
 
 run: $(OUT_DIR)/main.elf
-	qemu-system-i386 -kernel '$<' -s -d int -no-reboot
+	qemu-system-i386 -kernel '$<' -s -d int -no-reboot -rtc base=localtime,clock=vm
 
 run-img: $(OUT_DIR)/main.img
 	qemu-system-i386 -hda '$<'

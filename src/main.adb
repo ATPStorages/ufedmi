@@ -1,5 +1,7 @@
-with System.Low_Level;
 with System.Storage_Elements;
+
+with Interfaces; use Interfaces;
+with System.Low_Level; use System.Low_Level;
 
 procedure Main is
 
@@ -74,17 +76,18 @@ procedure Main is
       end loop;
    end Clear;
 
-   I : Integer := 0;
+   I : Unsigned_32 := 0;
 begin
    Clear (BLACK);
    Put_String (1, 1, BLACK, BRIGHT, "Now running.                   Counter:");
    Put_String (1, 2, BLACK, BRIGHT, "                                       ");
    Put_String (1, 3, BLACK, BRIGHT, "---------------------------------------");
 
-   System.Low_Level.Disable_Interrupts;
+   Disable_Interrupts;
 
    while (True) loop
       I := I + 1;
-      Put_String (1, 2, BRIGHT, BLACK, System.Low_Level.A20_Line_Status'Image);
+      Put_String (1, 2, BRIGHT, BLACK, I'Image);
+      delay 1.0;
    end loop;
 end Main;

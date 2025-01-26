@@ -22,6 +22,7 @@ library project Ufedmi_RTS is
          "-m32",
          "-Wall",
          "-Wextra",
+         "-gnatp",
          
          "-gnatg",
          "-Os",

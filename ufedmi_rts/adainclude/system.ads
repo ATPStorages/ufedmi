@@ -73,4 +73,12 @@ private
       Convention => C,
       Link_Name => "__gnat_rcheck_CE_Length_Check";
 
+   procedure Invalid_Check
+      (File : Address;
+       Line : Integer)
+   with
+      Export,
+      Convention => C,
+      Link_Name => "__gnat_rcheck_CE_Invalid_Data";
+
 end System;
