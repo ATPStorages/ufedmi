@@ -24,7 +24,7 @@ package System.CGA_TextMode is
    type Text_Buffer is array (Natural range <>) of Text_Buffer_Char;
 
    COLS : constant := 80;
-   ROWS : constant := 24;
+   ROWS : constant := 25;
 
    subtype Col is Natural range 0 .. COLS - 1;
    subtype Row is Natural range 0 .. ROWS - 1;
@@ -34,6 +34,8 @@ package System.CGA_TextMode is
 
    X : Natural := 0;
    Y : Natural := 0;
+
+   procedure New_Line;
 
    procedure Put_Char (Fg, Bg : Color; Ch : Character);
    procedure Put_String (Fg, Bg : Color; S : String);

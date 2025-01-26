@@ -1,16 +1,31 @@
 package body System.CGA_TextMode is
 
+   procedure New_Line is
+   begin
+      X := 0;
+      Y := Y + 1;
+      if Y > ROWS then
+         Clear (BLACK);
+         Y := 0;
+      end if;
+   end New_Line;
+
    --------------
    -- Put_Char --
    --------------
 
    procedure Put_Char (Fg, Bg : Color; Ch : Character) is
    begin
+      if Ch = ASCII.LF or else Y = ROWS then
+         New_Line;
+         if Ch = ASCII.LF then
+            return;
+         end if;
+      end if;
       Output (Y * COLS + X) := (Ch, Fg, Bg);
       X := X + 1;
       if X = COLS then
-         X := 0;
-         Y := Y + 1;
+         New_Line;
       end if;
    end Put_Char;
 
@@ -21,13 +36,7 @@ package body System.CGA_TextMode is
    procedure Put_String (Fg, Bg : Color; S : String) is
    begin
       for I in S'Range loop
-         if S (I) = ASCII.LF then
-            X := 0;
-            Y := Y + 1;
-            goto Continue;
-         end if;
          Put_Char (Fg, Bg, S (I));
-         <<Continue>>
       end loop;
    end Put_String;
 
@@ -38,10 +47,8 @@ package body System.CGA_TextMode is
    procedure Clear (Bg : Color) is
    begin
       for C in Col'Range loop
-            X := C;
          for R in Row'Range loop
-            Y := R;
-            Put_Char (Bg, Bg, ' ');
+            Output (R * COLS + C) := (' ', Bg, Bg);
          end loop;
       end loop;
       X := 0;
