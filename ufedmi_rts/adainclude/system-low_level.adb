@@ -2,8 +2,8 @@ with System.Machine_Code; use System.Machine_Code;
 
 package body System.Low_Level is
 
-   HT : constant Character := Character'Val (9);
-   LF : constant Character := Character'Val (10);
+   HT : Character renames ASCII.HT;
+   LF : Character renames ASCII.LF;
 
    function Read_Pin (Pin : CPU_Pin) return Unsigned_16 is
       Output : Unsigned_16 := 0;
