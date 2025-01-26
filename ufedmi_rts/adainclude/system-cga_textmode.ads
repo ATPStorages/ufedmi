@@ -59,7 +59,7 @@ package System.CGA_TextMode is
    Y : Natural := 0;
 
    Foreground_Color : Color := (True, WHITE);
-   Background_Color : Color := (False, BROWN);
+   Background_Color : Color := (False, BLACK);
 
    procedure New_Line;
 

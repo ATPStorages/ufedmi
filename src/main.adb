@@ -19,4 +19,5 @@ begin
    Put_Line ("Issue");
    Put_Line ("End");
    End_Section;
+   Halt;
 end Main;

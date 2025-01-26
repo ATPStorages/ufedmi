@@ -6,14 +6,16 @@ package System.Low_Level is
       (PS_2_DATA,
        PS_2_REGISTER,
        CMOS_COMMAND,
-       CMOS_DATA)
-      with Size => 8;
+       CMOS_DATA,
+       QEMU_SHUTDOWN) --  Write_Pin w/ 16#2000# to shutdown
+      with Size => 16;
 
    for CPU_Pin use
-      (PS_2_DATA     => 16#60#,
-       PS_2_REGISTER => 16#64#,
-       CMOS_COMMAND  => 16#70#,
-       CMOS_DATA     => 16#71#);
+      (PS_2_DATA     => 16#060#,
+       PS_2_REGISTER => 16#064#,
+       CMOS_COMMAND  => 16#070#,
+       CMOS_DATA     => 16#071#,
+       QEMU_SHUTDOWN => 16#604#);
 
    function Read_Pin (Pin : CPU_Pin) return Unsigned_16;
    procedure Write_Pin (Pin : CPU_Pin; Value : Unsigned_16);
