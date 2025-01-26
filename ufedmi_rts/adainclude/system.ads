@@ -29,18 +29,6 @@ private
 
    Null_Address : constant Address := 0;
 
-   type Size_T is mod Memory_Size;
-   type Word is mod 2 ** Storage_Unit;
-   type Chunk is array (Size_T range <>) of Word;
-
-   function Copy_Bytes
-      (To, From : Address;
-       Length   : Size_T)
-   return Address with
-      Export,
-      Convention => C,
-      Link_Name => "memcpy";
-
    procedure Overflow_Check
       (File : Address;
        Line : Integer)

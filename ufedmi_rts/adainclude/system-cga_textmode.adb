@@ -2,7 +2,7 @@ package body System.CGA_TextMode is
 
    procedure New_Line is
    begin
-      X := 0;
+      X := C;
       Y := Y + 1;
       if Y > ROWS then
          Clear;
@@ -60,7 +60,7 @@ package body System.CGA_TextMode is
             Output (R * COLS + C) := (' ', Background, Background);
          end loop;
       end loop;
-      X := 0;
+      X := C;
       Y := 0;
    end Clear;
 

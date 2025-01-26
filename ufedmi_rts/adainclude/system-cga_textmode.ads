@@ -54,7 +54,8 @@ package System.CGA_TextMode is
    Output : Text_Buffer (0 .. (COLS * ROWS) - 1)
       with Address => System.Storage_Elements.To_Address (16#B8000#);
 
-   X : Natural := 0;
+   C : Natural := 0;
+   X : Natural := C;
    Y : Natural := 0;
 
    Foreground_Color : Color := (True, WHITE);
