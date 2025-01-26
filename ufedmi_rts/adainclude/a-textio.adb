@@ -8,6 +8,8 @@ package body Ada.Text_IO is
    procedure Status_Line (State : Status; Category : String) is
       Saved_Foreground : constant Color := Foreground_Color;
    begin
+      C := C - 6;
+      X := C;
       Put ("[");
       Foreground_Color := Status_Colors (State);
       case State is
@@ -17,19 +19,20 @@ package body Ada.Text_IO is
       end case;
       Foreground_Color := Saved_Foreground;
       Put ("] ");
+      C := C + 6;
       Put_Line (Category
          (Category'First .. Category'Size / Category'Component_Size));
    end Status_Line;
 
    procedure Begin_Section is
    begin
-      C := C + 3;
+      C := C + 1;
       X := C;
    end Begin_Section;
 
    procedure End_Section is
    begin
-      C := C - 3;
+      C := C - 1;
       X := C;
    end End_Section;
 
