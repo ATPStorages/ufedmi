@@ -11,14 +11,15 @@ RTS_ODIR := $(RTS_DDIR)/obj
 SRC_DIR := src
 ASM_DIR := $(SRC_DIR)/asm
 
-build-img: $(OUT_DIR)/main.img
+build-iso: $(OUT_DIR)/main.iso
 
 build: $(OUT_DIR)/main.elf
 
-$(OUT_DIR)/main.img: $(OUT_DIR)/main.elf
+$(OUT_DIR)/main.iso: $(OUT_DIR)/main.elf
 	rm -f $(SRC_DIR)/iso/**.elf
 	cp '$<' $(SRC_DIR)/iso/boot
 	grub-mkrescue -o '$@' $(SRC_DIR)/iso
+	cp '$@' /mnt/c/Users/Adenosine3Phosphate/Downloads/main.iso
 
 ADA_FILES := $(wildcard $(SRC_DIR)/*.ad*)
 RTS_FILES := $(wildcard $(RTS_DIR)/*.ad*)
@@ -42,7 +43,7 @@ clean:
 	rm -rf $(OUT_DIR)/*
 
 run: $(OUT_DIR)/main.elf
-	qemu-system-i386 -kernel '$<' -s -d int -no-reboot -rtc base=localtime,clock=vm
+	qemu-system-i386 -kernel '$<' -s -d int -no-reboot -rtc base=localtime,clock=vm -audiodev pa,id=snd0 -machine pcspk-audiodev=snd0
 
-run-img: $(OUT_DIR)/main.img
-	qemu-system-i386 -hda '$<'
+run-iso: $(OUT_DIR)/main.iso
+	qemu-system-i386 -hda $<

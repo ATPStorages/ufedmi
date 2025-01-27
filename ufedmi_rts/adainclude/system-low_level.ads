@@ -18,11 +18,15 @@ package System.Low_Level is
        QEMU_SHUTDOWN => 16#604#);
 
    function Read_Pin (Pin : CPU_Pin) return Unsigned_16;
+   pragma Inline (Read_Pin);
+
    procedure Write_Pin (Pin : CPU_Pin; Value : Unsigned_16);
+   pragma Inline (Write_Pin);
 
    procedure Disable_Interrupts (Non_Maskable_Interrupts : Boolean := True);
    procedure Enable_Interrupts (Non_Maskable_Interrupts : Boolean := True);
    function A20_Line_Status return Unsigned_16;
    procedure Halt;
+   pragma Inline (Halt);
 
 end System.Low_Level;
