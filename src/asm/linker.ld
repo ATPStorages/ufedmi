@@ -1,7 +1,7 @@
 ENTRY (loader)
 SECTIONS
 {
-  . = 0x00100000;
+  . = 0x00007E00;
   .mbheader : {
     *(.mbheader)
   }

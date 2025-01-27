@@ -18,7 +18,7 @@ MultiBootHeader:
 
 section .text
 
-STACKSIZE equ 0x4000
+STACKSIZE equ 0x4000 ; 16 kib
 
 loader:
   mov esp, stack+STACKSIZE

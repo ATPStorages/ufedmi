@@ -72,6 +72,15 @@ begin
    end;
    --  ACPI End
    End_Section;
+   declare
+      Segment : Segmented_Address := As_Segmented_Address (Put_Line'Address);
+      use type Interfaces.Unsigned_16;
+   begin
+      Put_Line (Segment.Segment'Image);
+      Put_Line (Segment.Offset'Image);
+      Put_Line (Put_Line'Address'Image);
+      Put_Line (Interfaces.Unsigned_16'((Segment.Segment * 16#10#) + Segment.Offset)'Image);
+   end;
    Put_Line ("PS/2 initialization");
    Begin_Section;
    --  PS/2

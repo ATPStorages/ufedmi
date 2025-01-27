@@ -5,6 +5,12 @@ package body System.Low_Level is
    HT : Character renames ASCII.HT;
    LF : Character renames ASCII.LF;
 
+   function As_Segmented_Address (Addr : Address) return Segmented_Address is
+   begin
+      return Segmented_Address'(Unsigned_16 (Addr / 16),
+                                Unsigned_16 (Addr rem 16));
+   end As_Segmented_Address;
+
    function Read_Pin (Pin : CPU_Pin) return Unsigned_16 is
       Output : Unsigned_16 := 0;
    begin

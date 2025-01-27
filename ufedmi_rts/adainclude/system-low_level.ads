@@ -17,6 +17,12 @@ package System.Low_Level is
        CMOS_DATA     => 16#071#,
        QEMU_SHUTDOWN => 16#604#);
 
+   type Segmented_Address is record
+      Segment, Offset : Interfaces.Unsigned_16;
+   end record with Size => 32;
+
+   function As_Segmented_Address (Addr : Address) return Segmented_Address;
+
    function Read_Pin (Pin : CPU_Pin) return Unsigned_16;
    pragma Inline (Read_Pin);
 
