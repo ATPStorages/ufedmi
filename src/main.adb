@@ -57,14 +57,14 @@ begin
    if RSDP'Address = System.Null_Address then
       Status_Line (ERROR, "RSDP not found");
    else
-      Status_Line (OK, "RSDT Address:"  & RSDP.Rsdt_Address'Image);
-      Put_Line ("RSDP Checksum:"  & RSDP.Checksum'Image);
-      Put_Line ("RSDP OEM ID  : " & RSDP.OEM_ID);
-      Put_Line ("RSDP Revision:"  & RSDP.Revision'Image);
+      Status_Line (OK, "RSDT Address :"  & RSDP.Rsdt_Address'Image);
+      Put_Line    (    "RSDP Checksum:"  & RSDP.Checksum'Image);
+      Put_Line    (    "RSDP OEM ID  : " & RSDP.OEM_ID);
+      Put_Line    (    "RSDP Revision:"  & RSDP.Revision'Image);
       if RSDP.Revision >= 2 then
-      Status_Line (OK, "XSDP Address:"  & XSDP.Xsdt_Address'Image);
-         Put_Line ("XSDP Checksum:" & XSDP.Checksum'Image);
-         Put_Line ("XSDP Length  :" & XSDP.Length'Image);
+         Status_Line (OK, "XSDP Address :"  & XSDP.Xsdt_Address'Image);
+         Put_Line    (    "XSDP Checksum:" & XSDP.Checksum'Image);
+         Put_Line    (    "XSDP Length  :" & XSDP.Length'Image);
       end if;
    end if;
    --  ACPI End
