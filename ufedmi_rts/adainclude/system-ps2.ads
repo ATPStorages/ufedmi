@@ -79,14 +79,14 @@ package System.PS2 is
    end record with Size => 8;
 
    for Controller_Configuration use record
-      First_Port_Interrupts  at 0 range 0 .. 0;
-      Second_Port_Interrupts at 0 range 1 .. 1;
-      POST_OK                at 0 range 2 .. 2;
-      Reserved_1             at 0 range 3 .. 3;
-      First_Port_Clock       at 0 range 4 .. 4;
-      Second_Port_Clock      at 0 range 5 .. 5;
-      First_Post_Translation at 0 range 6 .. 6;
-      Reserved_2             at 0 range 7 .. 7;
+      First_Port_Interrupts  at 0 range 7 .. 7;
+      Second_Port_Interrupts at 0 range 6 .. 6;
+      POST_OK                at 0 range 5 .. 5;
+      Reserved_1             at 0 range 4 .. 4;
+      First_Port_Clock       at 0 range 3 .. 3;
+      Second_Port_Clock      at 0 range 2 .. 2;
+      First_Post_Translation at 0 range 1 .. 1;
+      Reserved_2             at 0 range 0 .. 0;
    end record;
 
    type Controller_Output is record
@@ -107,5 +107,7 @@ package System.PS2 is
       First_Port_Clock   at 0 range 6 .. 6;
       First_Port_Data    at 0 range 7 .. 7;
    end record;
+
+   function Read_Controller_Configuration return Controller_Configuration;
 
 end System.PS2;
