@@ -1,7 +1,7 @@
 with Interfaces; use Interfaces;
 
 package System.Low_Level is
-   pragma Preelaborate;
+   pragma Pure;
    pragma No_Elaboration_Code_All;
 
    type CPU_Pin is
