@@ -20,6 +20,7 @@ package System.Storage_Elements with
   Always_Terminates
 is
    pragma Pure;
+   pragma No_Elaboration_Code_All;
    --  Note that we take advantage of the implementation permission to make
    --  this unit Pure instead of Preelaborable; see RM 13.7.1(15). In Ada 2005,
    --  this is Pure in any case (AI-362).

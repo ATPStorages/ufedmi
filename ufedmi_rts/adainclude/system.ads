@@ -1,5 +1,6 @@
 package System is
-   pragma Pure (System);
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    Min_Int             : constant := -2 ** (Standard'Max_Integer_Size - 1);
    Max_Int             : constant :=  2 ** (Standard'Max_Integer_Size - 1) - 1;

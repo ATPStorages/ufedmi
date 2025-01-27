@@ -1,4 +1,5 @@
 package Ada.Text_IO is
+   pragma No_Elaboration_Code_All;
 
    type Status is (OK, WARNING, ERROR);
 

@@ -1,4 +1,6 @@
 package System.PS2 is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    type Buffer_Status is (EMPTY, FULL) with Size => 1;
    for Buffer_Status use (EMPTY => 0, FULL => 1);

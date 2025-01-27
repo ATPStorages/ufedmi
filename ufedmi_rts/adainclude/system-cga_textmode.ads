@@ -1,6 +1,7 @@
 with System.Storage_Elements;
 
 package System.CGA_TextMode is
+   pragma No_Elaboration_Code_All;
 
    type Base_Color is
       (BLACK,

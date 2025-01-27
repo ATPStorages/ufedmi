@@ -1,4 +1,6 @@
 package System.Img_Int is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    procedure Image_Integer
      (Value        :        Integer;

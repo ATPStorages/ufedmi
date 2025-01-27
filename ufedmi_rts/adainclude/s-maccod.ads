@@ -37,6 +37,7 @@ package System.Machine_Code
   with SPARK_Mode => Off
 is
    pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    --  All identifiers in this unit are implementation defined
 

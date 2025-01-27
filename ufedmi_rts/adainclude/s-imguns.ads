@@ -1,5 +1,7 @@
 with System.Unsigned_Types;
 package System.Img_Uns is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    subtype Unsigned is Unsigned_Types.Unsigned;
 

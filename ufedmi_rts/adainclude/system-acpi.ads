@@ -2,6 +2,7 @@ with Interfaces;
 
 package System.ACPI is
    pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    type Root_System_Description_Pointer is record
       Signature    : String (1 .. 8);

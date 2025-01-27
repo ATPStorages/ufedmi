@@ -1,6 +1,8 @@
 with Interfaces; use Interfaces;
 
 package System.RTC is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    type CMOS_RTC_Snapshot is record
       Second       : Unsigned_16;

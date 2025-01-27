@@ -1,4 +1,7 @@
 package Ada.Interrupts is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
+
    type Interrupt is
       (DIVIDE_ERROR,
        NON_MASKABLE_INTERRUPT,
@@ -39,7 +42,5 @@ package Ada.Interrupts is
        ALIGNMENT_CHECK             => 16#11#,
        MACHINE_CHECK               => 16#12#,
        SIMD_FLOATING_POINT_ERROR   => 16#13#);
-
-   procedure Base_Interrupt with Convention => C;
 
 end Ada.Interrupts;

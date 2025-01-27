@@ -1,6 +1,8 @@
 with Interfaces; use Interfaces;
 
 package System.Low_Level is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    type CPU_Pin is
       (PS_2_DATA,

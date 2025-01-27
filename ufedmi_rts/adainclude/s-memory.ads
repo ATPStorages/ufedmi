@@ -1,6 +1,8 @@
 with System.Storage_Elements;
 
 package System.Memory is
+   pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    subtype Integer_Address is System.Storage_Elements.Integer_Address;
 

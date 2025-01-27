@@ -1,5 +1,7 @@
 with Interfaces;
 package System.PS2.Keyboard is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    type Keyboard_Command is
       (CONFIGURE_LOCKS,
