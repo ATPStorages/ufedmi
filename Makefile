@@ -42,8 +42,10 @@ clean:
 	rm -rf $(RTS_DDIR)/*
 	rm -rf $(OUT_DIR)/*
 
+QEMU_FLAGS := -s -d int -no-reboot -usb -usbdevice keyboard -usbdevice mouse -usbdevice tablet
+
 run: $(OUT_DIR)/main.elf
-	qemu-system-i386 -kernel '$<' -s -d int -no-reboot -rtc base=localtime,clock=vm -audiodev pa,id=snd0 -machine pcspk-audiodev=snd0
+	qemu-system-i386 -kernel '$<' $(QEMU_FLAGS)
 
 run-iso: $(OUT_DIR)/main.iso
-	qemu-system-i386 -hda $<
+	qemu-system-i386 -hda '$<' $(QEMU_FLAGS)
