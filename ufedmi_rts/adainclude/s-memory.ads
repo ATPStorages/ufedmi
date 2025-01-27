@@ -17,4 +17,12 @@ package System.Memory is
       Convention => C,
       Link_Name => "memcpy";
 
+   function Move_Bytes
+      (To, From : Address;
+       Length   : Integer_Address)
+   return Address with
+      Export,
+      Convention => C,
+      Link_Name => "memmove";
+
 end System.Memory;
