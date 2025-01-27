@@ -1,3 +1,5 @@
+with System.Timings; use System.Timings;
+
 package body System.Relative_Delays is
 
    procedure Delay_For (Time : Duration) is

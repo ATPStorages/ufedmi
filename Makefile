@@ -42,7 +42,11 @@ clean:
 	rm -rf $(RTS_DDIR)/*
 	rm -rf $(OUT_DIR)/*
 
-QEMU_FLAGS := -s -d int -no-reboot -usb -usbdevice keyboard -usbdevice mouse -usbdevice tablet
+QEMU_FLAGS := -s -d int -no-reboot \
+			  -usb -usbdevice keyboard -usbdevice mouse -usbdevice tablet \
+			  -net none #\
+			  -drive if=pflash,format=raw,unit=0,file=./OVMF_CODE_4M.fd,readonly=on \
+			  -drive if=pflash,format=raw,unit=1,file=./OVMF_VARS_4M.fd
 
 run: $(OUT_DIR)/main.elf
 	qemu-system-i386 -kernel '$<' $(QEMU_FLAGS)

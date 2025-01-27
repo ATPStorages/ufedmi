@@ -1,4 +1,6 @@
 package Interfaces is
+   pragma Pure;
+   pragma No_Elaboration_Code_All;
 
    type Unsigned_8 is mod 2 ** 8 with Size => 8;
    pragma Provide_Shift_Operators (Unsigned_8);

@@ -1,16 +1,17 @@
 with Interfaces;
 with System;
-with System.ACPI;
 with System.PS2;
-with System.Relative_Delays;
 with System.RTC;
+with System.Timings;
 
 with Ada.Text_IO; use Ada.Text_IO;
 with System.Low_Level; use System.Low_Level;
 with System.CGA_TextMode; use System.CGA_TextMode;
-with System.Storage_Elements;
+with System.ACPI.Structures; use System.ACPI.Structures;
 
 procedure Main is
+   use type System.Address;
+   use type Interfaces.Unsigned_8;
 begin
    Clear;
    Disable_Interrupts;
@@ -40,7 +41,7 @@ begin
           " |"    & Data.D'Image);
       if Data.D > 0 and Data.Year > 24 then
          Put_Line ("RTC looks sane enough");
-         System.Relative_Delays.Reliable_Clock_Source_Entry :=
+         System.Timings.Reliable_Clock_Source_Entry :=
             System.RTC.Read_Seconds'Access;
          Status_Line (OK, "Set relative delay clock source to RTC (1s res.)");
       else
@@ -52,35 +53,22 @@ begin
    Put_Line ("ACPI Initialization");
    Begin_Section;
    --  ACPI
-   declare
-      RSDP_Addr : System.Address;
-      use type System.Address;
-   begin
-      Put_Line ("Searching for RSDP");
-      RSDP_Addr := System.ACPI.Search;
-      if RSDP_Addr = System.Null_Address then
-         Status_Line (ERROR, "Unable to find ACPI RSDP");
-      else
-         declare
-            RSDP : System.ACPI.Root_System_Description_Pointer
-               with Address => RSDP_Addr;
-         begin
-            Status_Line (OK, "ACPI OEM ID  : " & RSDP.OEM_ID);
-            Status_Line (OK, "ACPI Revision:"  & RSDP.Revision'Image);
-         end;
+   System.ACPI.Structures.Initialize;
+   if RSDP'Address = System.Null_Address then
+      Status_Line (ERROR, "RSDP not found");
+   else
+      Status_Line (OK, "RSDT Address:"  & RSDP.Rsdt_Address'Image);
+      Put_Line ("RSDP Checksum:"  & RSDP.Checksum'Image);
+      Put_Line ("RSDP OEM ID  : " & RSDP.OEM_ID);
+      Put_Line ("RSDP Revision:"  & RSDP.Revision'Image);
+      if RSDP.Revision >= 2 then
+      Status_Line (OK, "XSDP Address:"  & XSDP.Xsdt_Address'Image);
+         Put_Line ("XSDP Checksum:" & XSDP.Checksum'Image);
+         Put_Line ("XSDP Length  :" & XSDP.Length'Image);
       end if;
-   end;
+   end if;
    --  ACPI End
    End_Section;
-   declare
-      Segment : Segmented_Address := As_Segmented_Address (Put_Line'Address);
-      use type Interfaces.Unsigned_16;
-   begin
-      Put_Line (Segment.Segment'Image);
-      Put_Line (Segment.Offset'Image);
-      Put_Line (Put_Line'Address'Image);
-      Put_Line (Interfaces.Unsigned_16'((Segment.Segment * 16#10#) + Segment.Offset)'Image);
-   end;
    Put_Line ("PS/2 initialization");
    Begin_Section;
    --  PS/2
