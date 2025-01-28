@@ -1,5 +1,4 @@
 with System.CGA_TextMode; use System.CGA_TextMode;
-with System.Serial;
 
 package body Ada.Text_IO is
 
@@ -43,11 +42,7 @@ package body Ada.Text_IO is
    end Put_Line;
 
    procedure Put (Line : String) is
-      use type System.Low_Level.CPU_Pin;
    begin
-      if COM /= System.Low_Level.NONE then
-         System.Serial.Serial_Write_String (COM, Line);
-      end if;
       Put_String (Str => Line);
    end Put;
 

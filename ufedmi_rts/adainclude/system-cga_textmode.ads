@@ -1,7 +1,10 @@
 with System.Storage_Elements;
+with System.Low_Level;
 
 package System.CGA_TextMode is
    pragma No_Elaboration_Code_All;
+
+   COM : System.Low_Level.CPU_Pin := System.Low_Level.NONE;
 
    type Base_Color is
       (BLACK,

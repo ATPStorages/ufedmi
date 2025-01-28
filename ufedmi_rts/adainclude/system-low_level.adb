@@ -75,4 +75,13 @@ package body System.Low_Level is
       return Output;
    end A20_Check;
 
+   function Read_Control_Register_0 return Control_Register_0 is
+      Output : Control_Register_0;
+   begin
+      Asm ("mov %%cr0, %0",
+           Outputs  => Control_Register_0'Asm_Output ("=r", Output),
+           Volatile => True);
+      return Output;
+   end Read_Control_Register_0;
+
 end System.Low_Level;

@@ -76,4 +76,34 @@ package System.Low_Level is
 
    function A20_Check return Boolean;
 
+   type Control_Register_0 is record
+      Protected_Mode          : Boolean;
+      Monitor_Coprocessor     : Boolean;
+      x87_FPU_Emulated        : Boolean;
+      x87_Task_Context_Saving : Boolean;
+      Using_80387_Beyond      : Boolean;
+      x87_Internal_Errors     : Boolean;
+      Page_Write_Protection   : Boolean;
+      Alignment_Check_Enabled : Boolean;
+      Write_Through_Disabled  : Boolean;
+      Memory_Cache_Disabled   : Boolean;
+      Paging                  : Boolean;
+   end record with Size => 32;
+
+   for Control_Register_0 use record
+      Protected_Mode          at 0 range 0 .. 0;
+      Monitor_Coprocessor     at 0 range 1 .. 1;
+      x87_FPU_Emulated        at 0 range 2 .. 2;
+      x87_Task_Context_Saving at 0 range 3 .. 3;
+      Using_80387_Beyond      at 0 range 4 .. 4;
+      x87_Internal_Errors     at 0 range 5 .. 5;
+      Page_Write_Protection   at 2 range 0 .. 0;
+      Alignment_Check_Enabled at 2 range 2 .. 2;
+      Write_Through_Disabled  at 3 range 5 .. 5;
+      Memory_Cache_Disabled   at 3 range 6 .. 6;
+      Paging                  at 3 range 7 .. 7;
+   end record;
+
+   function Read_Control_Register_0 return Control_Register_0;
+
 end System.Low_Level;

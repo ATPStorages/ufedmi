@@ -1,3 +1,4 @@
+with System.Serial;
 package body System.CGA_TextMode is
 
    procedure Move_All_Y
@@ -37,7 +38,11 @@ package body System.CGA_TextMode is
        Background : Color := Background_Color;
        Char : Character)
    is
+      use type System.Low_Level.CPU_Pin;
    begin
+      if COM /= System.Low_Level.NONE then
+         System.Serial.Serial_Write_Char (COM, Char);
+      end if;
       if Char = ASCII.LF or else Y = ROWS then
          New_Line;
          if Char = ASCII.LF then

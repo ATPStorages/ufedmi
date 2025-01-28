@@ -31,8 +31,8 @@ begin
          Init_OK : constant Boolean := Serial_Initialize (COM_Pin);
       begin
          Status_Line ((if Init_OK then OK Else WARNING), COM_Pin'Image);
-         if Ada.Text_IO.COM = NONE then
-            Ada.Text_IO.COM := COM_Pin;
+         if System.CGA_TextMode.COM = NONE then
+            System.CGA_TextMode.COM := COM_Pin;
             Put_Line ("Logging on " & COM_Pin'Image);
          end if;
       end;
@@ -144,17 +144,48 @@ begin
    end if;
    --  PS/2 End
    End_Section;
-   Put_Line ("Protected mode initialization");
+   Put_Line ("Control register 0 stat");
    Begin_Section;
    -- Protected Mode
-   if A20_Check then
-      Status_Line (OK, "A20 gate is already opened");
-   else
-      Status_Line (WARNING, "A20 gate requires opening");
-   end if;
+   declare
+      CR0 : constant Control_Register_0 := Read_Control_Register_0;
+   begin
+      Put_Line ("Protected Mode                 : " &
+                CR0.Protected_Mode'Image);
+      if not CR0.Protected_Mode then
+         Begin_Section;
+         Put_Line ("Protected mode initialization");
+         Begin_Section;
+         Put_Line ("TODO");
+         End_Section;
+         Put_Line ("Protected mode entered");
+         End_Section;
+      end if;
+      Put_Line ("Monitor coprocessor            : " &
+                CR0.Monitor_Coprocessor'Image);
+      Put_Line ("x87 FPU Emulation              : " &
+                CR0.x87_FPU_Emulated'Image);
+      Put_Line ("x87 context saving             : " &
+                CR0.x87_Task_Context_Saving'Image);
+      Put_Line ("80387+ Math Coprocessor        : " &
+                CR0.Using_80387_Beyond'Image);
+      Put_Line ("x87 internal error reporting   : " &
+                CR0.x87_Task_Context_Saving'Image);
+      Put_Line ("Read-only page write protection: " &
+                CR0.Page_Write_Protection 'Image);
+      Put_Line ("Alignment check exception      : " &
+                CR0.Alignment_Check_Enabled'Image);
+      Put_Line ("Write-through caching          : " &
+                Boolean'Image (not CR0.Write_Through_Disabled));
+      Put_Line ("Memory caching                 : " &
+                Boolean'Image (not CR0.Memory_Cache_Disabled));
+      Put_Line ("Memory Paging                  : " &
+                Boolean'Image (    CR0.Paging));
+   end;
    --  Protected Mode End
    End_Section;
-   --  System initialization END
+   Put_Line ("System initialization complete");
+   --  System initialization End
    End_Section;
    Status_Line (OK, "UFEDMI started");
    Put_Line ("Launching shell");
