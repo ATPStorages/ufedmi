@@ -1,4 +1,5 @@
 with System.Machine_Code; use System.Machine_Code;
+with System.Storage_Elements; use System.Storage_Elements;
 
 package body System.Low_Level is
 
@@ -83,5 +84,25 @@ package body System.Low_Level is
            Volatile => True);
       return Output;
    end Read_Control_Register_0;
+
+   procedure Set_Global_Descriptor_Table (Addr : Address; Size : Unsigned_16)
+   is
+   begin
+      Asm ("mov %1, 0x500" & LF & HT &
+           "mov %0, 0x502" & LF & HT &
+           "lgdt 0x500",
+           Inputs   => (Unsigned_32'Asm_Input ("r",
+                                              Unsigned_32 (To_Integer (Addr))),
+                        Unsigned_16'Asm_Input ("r",
+                                               Size)),
+           Volatile => True);
+   end Set_Global_Descriptor_Table;
+
+   procedure Raise_Division_Error is
+   begin
+      Asm ("xor %%ecx, %%ecx" & LF & HT &
+           "div %%ecx",
+           Volatile => True);
+   end Raise_Division_Error;
 
 end System.Low_Level;

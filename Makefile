@@ -44,12 +44,12 @@ clean:
 
 QEMU_FLAGS := -s -d int -no-reboot \
 			  -usb -usbdevice keyboard -usbdevice mouse -usbdevice tablet \
-			  -net none -serial file:serial.out -enable-kvm -cpu 486  #\
+			  -net none -serial file:serial.out -cpu 486  #\
 			  -drive if=pflash,format=raw,unit=0,file=./OVMF_CODE_4M.fd,readonly=on \
 			  -drive if=pflash,format=raw,unit=1,file=./OVMF_VARS_4M.fd
 
 run: $(OUT_DIR)/main.elf
-	sudo qemu-system-i386 -kernel '$<' $(QEMU_FLAGS)
+	qemu-system-i386 -kernel '$<' $(QEMU_FLAGS)
 
 run-iso: $(OUT_DIR)/main.iso
-	sudo qemu-system-i386 -hda '$<' $(QEMU_FLAGS)
+	qemu-system-i386 -hda '$<' $(QEMU_FLAGS)

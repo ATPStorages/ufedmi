@@ -6,6 +6,7 @@ with System.RTC;
 with System.Timings;
 
 with Ada.Text_IO; use Ada.Text_IO;
+with System.Memory; use System.Memory;
 with System.Serial; use System.Serial;
 with System.Low_Level; use System.Low_Level;
 with System.CGA_TextMode; use System.CGA_TextMode;
@@ -144,9 +145,12 @@ begin
    end if;
    --  PS/2 End
    End_Section;
+   Put_Line ("Protected mode initialization");
+   Begin_Section;
+   --  Protected Mode
    Put_Line ("Control register 0 stat");
    Begin_Section;
-   -- Protected Mode
+   --  CR0 Check
    declare
       CR0 : constant Control_Register_0 := Read_Control_Register_0;
    begin
@@ -154,9 +158,10 @@ begin
                 CR0.Protected_Mode'Image);
       if not CR0.Protected_Mode then
          Begin_Section;
-         Put_Line ("Protected mode initialization");
+         Put_Line ("Protected mode entry initialization");
          Begin_Section;
          Put_Line ("TODO");
+         Halt;
          End_Section;
          Put_Line ("Protected mode entered");
          End_Section;
@@ -182,7 +187,42 @@ begin
       Put_Line ("Memory Paging                  : " &
                 Boolean'Image (    CR0.Paging));
    end;
-   --  Protected Mode End
+   --  CR0 Check End
+   End_Section;
+   Put_Line ("Global descriptor table initialization");
+   Begin_Section;
+   --  GDT
+   declare
+      GDT : Segment_Descriptor_Table (1 .. 4) with Address =>
+         To_Address (16#00000500#);
+      use type Interfaces.Unsigned_20;
+      use type Interfaces.Unsigned_16;
+   begin
+      Put_Line ("Writing to" & GDT'Address'Image &
+                ", length" & Integer (GDT'Length)'Image);
+      GDT (1) := Segment_Descriptor'(Base         => 0,
+                                     Limit        => 0,
+                                     Access_Flags => 0,
+                                     Flags        => 0);
+      GDT (2) := Segment_Descriptor'(Base         => 16#00400000#,
+                                     Limit        => 16#000FFFFF#,
+                                     Access_Flags => 16#9A#,
+                                     Flags        => 16#C#);
+      GDT (3) := Segment_Descriptor'(Base         => 16#004FFFFF#,
+                                     Limit        => 16#000FFFFF#,
+                                     Access_Flags => 16#92#,
+                                     Flags        => 16#C#);
+      GDT (4) := Segment_Descriptor'(Base         =>
+                                      Interfaces.Unsigned_32
+                                       (To_Integer (GDT (4)'Address)),
+                                     Limit        =>
+                                      (Segment_Descriptor'Size / 8) - 1,
+                                     Access_Flags => 16#89#,
+                                     Flags        => 16#0#);
+      Set_Global_Descriptor_Table (GDT'Address, GDT'Size / 8);
+   end;
+   --  GDT End
+   End_Section;
    End_Section;
    Put_Line ("System initialization complete");
    --  System initialization End

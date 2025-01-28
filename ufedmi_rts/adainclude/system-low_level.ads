@@ -106,4 +106,9 @@ package System.Low_Level is
 
    function Read_Control_Register_0 return Control_Register_0;
 
+   procedure Set_Global_Descriptor_Table (Addr : Address; Size : Unsigned_16)
+      with Inline_Always;
+
+   procedure Raise_Division_Error;
+
 end System.Low_Level;
