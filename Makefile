@@ -29,9 +29,9 @@ ADA_OBJS := $(patsubst $(SRC_DIR)/%.adb,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/%.a
 $(ADA_OBJS):
 
 $(AOBJ_DIR)/%.o: $(ASM_DIR)/%.asm
-	nasm -f elf32 $< -o $@
+	nasm -f elf32 -O0 -Ov  $< -o $@
 
-$(OUT_DIR)/main.elf: $(AOBJ_DIR)/*.o $(ADA_OBJS)
+$(OUT_DIR)/main.elf: $(AOBJ_DIR)/entry.o $(AOBJ_DIR)/intrpt_default_handler.o $(ADA_OBJS)
 	alr build
 	mv $(RTS_ODIR)/*.o $(RTS_DDIR)
 	ld -m elf_i386 -T $(ASM_DIR)/linker.ld -o '$@' $^ -z noexecstack -z noseparate-code

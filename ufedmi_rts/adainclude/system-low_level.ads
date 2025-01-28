@@ -6,6 +6,8 @@ package System.Low_Level is
 
    type CPU_Pin is
       (NONE,
+       PIC_1_COMMAND,
+       PIC_1_DATA,
        PIC_CHANNEL_0_DATA,
        PIC_CHANNEL_1_DATA,
        PIC_CHANNEL_2_DATA,
@@ -15,6 +17,8 @@ package System.Low_Level is
        PS_2_REGISTER,
        CMOS_COMMAND,
        CMOS_DATA,
+       PIC_2_COMMAND,
+       PIC_2_DATA,
        COM_1,
        COM_1_INTERRUPTS,
        COM_1_INTRP_FIFO_CTRL,
@@ -28,6 +32,8 @@ package System.Low_Level is
 
    for CPU_Pin use
       (NONE                  => 16#000#,
+       PIC_1_COMMAND         => 16#020#,
+       PIC_1_DATA            => 16#021#,
        PIC_CHANNEL_0_DATA    => 16#040#,
        PIC_CHANNEL_1_DATA    => 16#041#,
        PIC_CHANNEL_2_DATA    => 16#042#,
@@ -37,6 +43,8 @@ package System.Low_Level is
        PS_2_REGISTER         => 16#064#,
        CMOS_COMMAND          => 16#070#,
        CMOS_DATA             => 16#071#,
+       PIC_2_COMMAND         => 16#0A0#,
+       PIC_2_DATA            => 16#0A1#,
        COM_1                 => 16#3F8#,
        COM_1_INTERRUPTS      => 16#3F9#,
        COM_1_INTRP_FIFO_CTRL => 16#3FA#,
@@ -59,10 +67,13 @@ package System.Low_Level is
    function Read_Pin (Pin : CPU_Pin) return Unsigned_16 with Inline_Always;
    procedure Write_Pin (Pin : CPU_Pin; Value : Unsigned_16) with Inline_Always;
 
-   procedure Disable_Interrupts (Non_Maskable_Interrupts : Boolean := True);
-   procedure Enable_Interrupts (Non_Maskable_Interrupts : Boolean := True);
-   function A20_Line_Status return Unsigned_16;
-   procedure Halt;
-   pragma Inline (Halt);
+   procedure Disable_Interrupts (Non_Maskable_Interrupts : Boolean := True)
+      with Inline_Always;
+   procedure Enable_Interrupts (Non_Maskable_Interrupts : Boolean := True)
+      with Inline_Always;
+   procedure Halt
+      with Inline_Always;
+
+   function A20_Check return Boolean;
 
 end System.Low_Level;

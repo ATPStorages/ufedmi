@@ -1,8 +1,10 @@
+with System.Low_Level;
+with System.Storage_Elements;
 package Ada.Interrupts is
-   pragma Pure;
+   pragma Preelaborate;
    pragma No_Elaboration_Code_All;
 
-   type Interrupt is
+   type Interrupt_ID is
       (DIVIDE_ERROR,
        NON_MASKABLE_INTERRUPT,
        BREAKPOINT,
@@ -23,7 +25,7 @@ package Ada.Interrupts is
        SIMD_FLOATING_POINT_ERROR)
       with Size => 8;
 
-   for Interrupt use
+   for Interrupt_ID use
       (DIVIDE_ERROR                => 16#00#,
        NON_MASKABLE_INTERRUPT      => 16#02#,
        BREAKPOINT                  => 16#03#,
@@ -42,5 +44,11 @@ package Ada.Interrupts is
        ALIGNMENT_CHECK             => 16#11#,
        MACHINE_CHECK               => 16#12#,
        SIMD_FLOATING_POINT_ERROR   => 16#13#);
+
+   type Interrupt_Vector_Array is array (0 .. 255) of
+      System.Low_Level.Segmented_Address with
+         Size => 8192;
+   Interrupt_Vector_Table : Interrupt_Vector_Array with
+         Address => System.Storage_Elements.To_Address (0);
 
 end Ada.Interrupts;

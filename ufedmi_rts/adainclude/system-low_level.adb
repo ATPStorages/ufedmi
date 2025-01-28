@@ -53,20 +53,26 @@ package body System.Low_Level is
       end if;
    end Enable_Interrupts;
 
-   function A20_Line_Status return Unsigned_16 is
-      Output : constant Unsigned_16 := 1;
-   begin
-      --  Asm ("xor %%dx, %%dx" & LF & HT &
-      --       "mov %%dx, %0",
-      --       Volatile => True,
-      --       Clobber  => "dx",
-      --       Outputs  => u2'Asm_Output ("=c", Output));
-      return Output;
-   end A20_Line_Status;
-
    procedure Halt is
    begin
       Asm ("hlt", Volatile => True);
    end Halt;
+
+   function A20_Check return Boolean is
+      Output : Boolean;
+   begin
+      Asm ("mov 0x007DFE, %0" & LF & HT &
+           "sub 0x107DFE, %0" & LF & HT &
+           "test %0, %0"      & LF & HT &
+           "jz zero"          & LF & HT &
+           "mov $1, %0"       & LF & HT &
+           "jmp ok"           & LF & HT &
+           "zero: xor %0, %0" & LF & HT &
+           "ok:",
+           Outputs  => Boolean'Asm_Output ("=g", Output),
+           Clobber  => "cc",
+           Volatile => True);
+      return Output;
+   end A20_Check;
 
 end System.Low_Level;

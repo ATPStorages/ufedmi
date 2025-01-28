@@ -1,5 +1,6 @@
-with Interfaces;
+with Ada.Interrupts.Defintitions;
 with System;
+with Interfaces;
 with System.PS2;
 with System.RTC;
 with System.Timings;
@@ -9,6 +10,7 @@ with System.Serial; use System.Serial;
 with System.Low_Level; use System.Low_Level;
 with System.CGA_TextMode; use System.CGA_TextMode;
 with System.ACPI.Structures; use System.ACPI.Structures;
+with System.Storage_Elements; use System.Storage_Elements;
 
 procedure Main is
    use type System.Address;
@@ -20,7 +22,7 @@ begin
    Put_Line ("UFEDMI starting...");
    Begin_Section;
    --  System initialization
-   Put_Line ("COM / Serial Initialization");
+   Put_Line ("COM / Serial initialization");
    Begin_Section;
    --  COM / Serial
    for Pin_No in COM_Pins'Range loop
@@ -37,7 +39,7 @@ begin
    end loop;
    --  COM / Serial End
    End_Section;
-   Put_Line ("Checking Real Time Clock");
+   Put_Line ("Checking real time clock");
    Begin_Section;
    --  RTC
    declare
@@ -69,7 +71,7 @@ begin
    end;
    --  RTC End
    End_Section;
-   Put_Line ("ACPI Initialization");
+   Put_Line ("ACPI initialization");
    Begin_Section;
    --  ACPI
    System.ACPI.Structures.Initialize;
@@ -89,7 +91,7 @@ begin
          for Index in 1 .. (SDT.Length - 36) / 8 loop
             Put (Index'Image & ": ");
             declare
-               Table   : System.ACPI.Extended_System_Descriptor_Table_Header_Pointer :=
+               Table   : constant System.ACPI.Extended_System_Descriptor_Table_Header_Pointer :=
                   SDT.Tables_64 (Index);
                Raw_Sig : String (1 .. 4) with Address =>
                   Table.Signature'Address;
@@ -106,7 +108,7 @@ begin
          for Index in 1 .. (SDT.Length - 36) / 4 loop
             Put (Index'Image & ": ");
             declare
-               Table   : System.ACPI.System_Descriptor_Table_Header_Pointer :=
+               Table   : constant System.ACPI.System_Descriptor_Table_Header_Pointer :=
                   SDT.Tables_32 (Index);
                Raw_Sig : String (1 .. 4) with Address =>
                   Table.Signature'Address;
@@ -141,6 +143,16 @@ begin
       Status_Line (ERROR, "Erroneous state. POST from PS/2 is BAD");
    end if;
    --  PS/2 End
+   End_Section;
+   Put_Line ("Protected mode initialization");
+   Begin_Section;
+   -- Protected Mode
+   if A20_Check then
+      Status_Line (OK, "A20 gate is already opened");
+   else
+      Status_Line (WARNING, "A20 gate requires opening");
+   end if;
+   --  Protected Mode End
    End_Section;
    --  System initialization END
    End_Section;
