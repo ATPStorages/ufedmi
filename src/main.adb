@@ -199,7 +199,7 @@ begin
       use type Interfaces.Unsigned_16;
    begin
       Put_Line ("Writing to" & GDT'Address'Image &
-                ", length" & Integer (GDT'Length)'Image);
+                ", array length" & Integer (GDT'Length)'Image);
       GDT (1) := Segment_Descriptor'(Base         => 0,
                                      Limit        => 0,
                                      Access_Flags => 0,
@@ -219,7 +219,15 @@ begin
                                       (Segment_Descriptor'Size / 8) - 1,
                                      Access_Flags => 16#89#,
                                      Flags        => 16#0#);
-      Set_Global_Descriptor_Table (GDT'Address, GDT'Size / 8);
+      Set_Global_Descriptor_Table
+         ((GDT'Size / 8, Interfaces.Unsigned_32 (To_Integer (GDT'Address))));
+      declare
+         GDR : constant Global_Descriptor_Register :=
+            Get_Global_Descriptor_Register;
+      begin
+         Put_Line ("GDT now present at address" & GDR.Addr'Image &
+                   ", limited to" & GDR.Limit'Image & " bytes.");
+      end;
    end;
    --  GDT End
    End_Section;

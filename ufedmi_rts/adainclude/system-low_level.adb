@@ -1,5 +1,4 @@
 with System.Machine_Code; use System.Machine_Code;
-with System.Storage_Elements; use System.Storage_Elements;
 
 package body System.Low_Level is
 
@@ -85,18 +84,28 @@ package body System.Low_Level is
       return Output;
    end Read_Control_Register_0;
 
-   procedure Set_Global_Descriptor_Table (Addr : Address; Size : Unsigned_16)
+   procedure Set_Global_Descriptor_Table
+      (Register : Global_Descriptor_Register)
    is
    begin
-      Asm ("mov %1, 0x500" & LF & HT &
-           "mov %0, 0x502" & LF & HT &
-           "lgdt 0x500",
-           Inputs   => (Unsigned_32'Asm_Input ("r",
-                                              Unsigned_32 (To_Integer (Addr))),
-                        Unsigned_16'Asm_Input ("r",
-                                               Size)),
+      Asm ("mov %1, 0x7C00" & LF & HT &
+           "mov %0, 0x7C02" & LF & HT &
+           "lgdt 0x7C00",
+           Inputs   => (Unsigned_32'Asm_Input ("r", Register.Addr),
+                        Unsigned_16'Asm_Input ("r", Register.Limit)),
            Volatile => True);
    end Set_Global_Descriptor_Table;
+
+   function Get_Global_Descriptor_Register
+      return Global_Descriptor_Register
+   is
+      Register : Global_Descriptor_Register;
+   begin
+      Asm ("sgdt %0",
+           Outputs  => Global_Descriptor_Register'Asm_Output ("=m", Register),
+           Volatile => True);
+      return Register;
+   end Get_Global_Descriptor_Register;
 
    procedure Raise_Division_Error is
    begin

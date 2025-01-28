@@ -106,8 +106,16 @@ package System.Low_Level is
 
    function Read_Control_Register_0 return Control_Register_0;
 
-   procedure Set_Global_Descriptor_Table (Addr : Address; Size : Unsigned_16)
-      with Inline_Always;
+   type Global_Descriptor_Register is record
+      Limit : Unsigned_16;
+      Addr  : Unsigned_32;
+   end record with Pack, Size => 48;
+
+   procedure Set_Global_Descriptor_Table
+      (Register : Global_Descriptor_Register) with Inline_Always;
+
+   function Get_Global_Descriptor_Register
+      return Global_Descriptor_Register with Inline_Always;
 
    procedure Raise_Division_Error;
 
