@@ -32,12 +32,47 @@ package System.ACPI is
       Checksum     at 12 range 0 .. 7;
    end record;
 
-   type System_Descriptor_Table_Signature is
-      (RSDT, XSDT);
+   type SDT_Header_Signature is
+      (APIC,
+       FACP,
+       RSDT,
+       XSDT,
+       WAET,
+       HPET)
+      with Size => 32;
 
-   type System_Descriptor_Table_Header is record
-      Signature        : String (1 .. 4);
-      Length           : Interfaces.Unsigned_32;
+   for SDT_Header_Signature use
+      (APIC => 16#43495041#,
+       FACP => 16#50434146#,
+       RSDT => 16#54445352#,
+       XSDT => 16#54445358#,
+       WAET => 16#54454157#,
+       HPET => 16#54455048#);
+
+   type System_Descriptor_Table_Header;
+
+   type System_Descriptor_Table_Header_Pointer is
+      access System_Descriptor_Table_Header with Storage_Size => 0, Size => 32;
+   pragma No_Strict_Aliasing (System_Descriptor_Table_Header_Pointer);
+
+   type SDT_Header_Pointer_Array is
+      array (Interfaces.Unsigned_32 range <>) of
+         System_Descriptor_Table_Header_Pointer;
+
+   pragma Warnings (Off, "*bits of");
+   type Extended_System_Descriptor_Table_Header_Pointer is
+      access System_Descriptor_Table_Header with Storage_Size => 0, Size => 64;
+   pragma No_Strict_Aliasing (Extended_System_Descriptor_Table_Header_Pointer);
+   pragma Warnings (On, "*bits of");
+
+   type Extended_SDT_Header_Pointer_Array is
+      array (Interfaces.Unsigned_32 range <>) of
+         Extended_System_Descriptor_Table_Header_Pointer;
+
+   use type Interfaces.Unsigned_32;
+   type System_Descriptor_Table_Header
+      (Signature : SDT_Header_Signature; Length : Interfaces.Unsigned_32)
+   is record
       Revision         : Interfaces.Unsigned_8;
       Checksum         : Interfaces.Unsigned_8;
       OEM_ID           : String (1 .. 6);
@@ -45,27 +80,28 @@ package System.ACPI is
       OEM_Revision     : Interfaces.Unsigned_32;
       Creator_ID       : Interfaces.Unsigned_32;
       Creator_Revision : Interfaces.Unsigned_32;
-   end record with Size => 288;
-
-   type System_Descriptor_Table_Data
-      (Signature : System_Descriptor_Table_Signature)
-   is record
       case Signature is
          when RSDT =>
-            null;
+            --  Receiving end must validate index, 4 bytes per.
+            Tables_32 : SDT_Header_Pointer_Array (1 .. Length);
          when XSDT =>
+            --  Receiving end must validate index, 8 bytes per.
+            Tables_64 : Extended_SDT_Header_Pointer_Array (1 .. Length);
+         when others =>
             null;
       end case;
-   end record;
+   end record with Pack;
 
-   type System_Descriptor_Table is record
-      Header : System_Descriptor_Table_Header;
-      Data   : access System_Descriptor_Table_Data;
-   end record with Size => 320;
-
-   for System_Descriptor_Table use record
-      Header at 0  range 0 .. 287;
-      Data   at 36 range 0 .. 31;
+   for System_Descriptor_Table_Header use record
+      Signature        at 0  range 0 .. 31;
+      Length           at 4  range 0 .. 31;
+      Revision         at 8  range 0 .. 7;
+      Checksum         at 9  range 0 .. 7;
+      OEM_ID           at 10 range 0 .. 47;
+      OEM_Table_ID     at 16 range 0 .. 63;
+      OEM_Revision     at 24 range 0 .. 31;
+      Creator_ID       at 28 range 0 .. 31;
+      Creator_Revision at 32 range 0 .. 31;
    end record;
 
    function Search return Address;

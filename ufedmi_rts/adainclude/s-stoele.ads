@@ -57,8 +57,8 @@ is
    --  Conversion to/from integers
 
    type Integer_Address is mod Memory_Size;
-   type Word is mod 2 ** Storage_Unit;
-   type Chunk is array (Integer_Address range <>) of Word;
+   type Byte is mod 2 ** Storage_Unit;
+   type Chunk is array (Integer_Address range <>) of Byte;
 
    function To_Address (Value : Integer_Address) return Address;
    pragma Import (Intrinsic, To_Address);

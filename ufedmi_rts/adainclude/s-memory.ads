@@ -27,4 +27,12 @@ package System.Memory is
       Convention => C,
       Link_Name => "memmove";
 
+   function Compare_Bytes
+      (A, B   : Address;
+       Length : Integer_Address)
+   return Integer with
+      Export,
+      Convention => C,
+      Link_Name => "memcmp";
+
 end System.Memory;

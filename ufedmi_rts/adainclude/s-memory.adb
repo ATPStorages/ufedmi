@@ -5,7 +5,7 @@ package body System.Memory is
 
    HT : Character renames ASCII.HT;
    LF : Character renames ASCII.LF;
-   Usable_Heap_Address : Address := To_Address (16#00007E00#);
+   Usable_Heap_Address : Address := To_Address (16#00000500#);
 
    function Allocate (Length : Integer_Address) return Address is
       Saved_Address : constant Address := Usable_Heap_Address;
@@ -41,5 +41,25 @@ package body System.Memory is
            Clobber  => "cc");
       return To;
    end Move_Bytes;
+
+   function Compare_Bytes
+      (A, B   : Address;
+       Length : Integer_Address)
+   return Integer is
+      A_Chunk : Chunk (1 .. Length) with Address => A;
+      B_Chunk : Chunk (1 .. Length) with Address => B;
+      RA, RB  : Byte;
+   begin
+      for Index in 1 .. Length loop
+         RA := A_Chunk (Index);
+         RB := B_Chunk (Index);
+         if RA > RB then
+            return 1;
+         elsif RA < RB then
+            return -1;
+         end if;
+      end loop;
+      return 0;
+   end Compare_Bytes;
 
 end System.Memory;

@@ -1,15 +1,19 @@
+with Ada.Unchecked_Conversion;
 with System.Memory;
+
 with System.Storage_Elements; use System.Storage_Elements;
+
 package body System.ACPI.Structures is
 
-   SDT_HBytes : constant Integer_Address :=
-      System_Descriptor_Table_Header'Size / 8;
    RSDP_Bytes : constant Integer_Address :=
       Root_System_Description_Pointer'Size / 8;
 
    procedure Initialize is
       Start_Address : constant Address := Search;
       Holder        : Address;
+
+      function PC is new Ada.Unchecked_Conversion
+         (Address, System_Descriptor_Table_Header_Pointer);
       use type Interfaces.Unsigned_8;
    begin
       if Start_Address = Null_Address then
@@ -23,13 +27,9 @@ package body System.ACPI.Structures is
          Holder := System.Memory.Copy_Bytes (XSDP'Address,
                                              Holder,
                                              XSDP'Size / 8);
-         Holder := System.Memory.Copy_Bytes (SDT'Address,
-                                             XSDP.Xsdt_Address,
-                                             SDT_HBytes);
+         SDT := PC (XSDP.Xsdt_Address);
       else
-         Holder := System.Memory.Copy_Bytes (SDT'Address,
-                                             RSDP.Rsdt_Address,
-                                             SDT_HBytes);
+         SDT := PC (RSDP.Rsdt_Address);
       end if;
    end Initialize;
 

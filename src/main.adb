@@ -12,6 +12,7 @@ with System.ACPI.Structures; use System.ACPI.Structures;
 procedure Main is
    use type System.Address;
    use type Interfaces.Unsigned_8;
+   use type Interfaces.Unsigned_32;
 begin
    Clear;
    Disable_Interrupts;
@@ -65,11 +66,44 @@ begin
          Status_Line (OK, "XSDP Address :"  & XSDP.Xsdt_Address'Image);
          Put_Line    (    "XSDP Checksum:" & XSDP.Checksum'Image);
          Put_Line    (    "XSDP Length  :" & XSDP.Length'Image);
+         Put_Line ("Iterating over XSDP entries");
+         Begin_Section;
+         for Index in 1 .. (SDT.Length - 36) / 8 loop
+            Put (Index'Image & ": ");
+            declare
+               Table   : System.ACPI.Extended_System_Descriptor_Table_Header_Pointer :=
+                  SDT.Tables_64 (Index);
+               Raw_Sig : String (1 .. 4) with Address =>
+                  Table.Signature'Address;
+            begin
+               Status_Line ((if Table.Signature'Valid then OK else WARNING),
+                            Raw_Sig & ", recognized: " &
+                            Table.Signature'Valid'Image);
+            end;
+         end loop;
+         End_Section;
+      else
+         Put_Line ("Iterating over RSDP entries");
+         Begin_Section;
+         for Index in 1 .. (SDT.Length - 36) / 4 loop
+            Put (Index'Image & ": ");
+            declare
+               Table   : System.ACPI.System_Descriptor_Table_Header_Pointer :=
+                  SDT.Tables_32 (Index);
+               Raw_Sig : String (1 .. 4) with Address =>
+                  Table.Signature'Address;
+            begin
+               Status_Line ((if Table.Signature'Valid then OK else WARNING),
+                            Raw_Sig & ", recognized: " &
+                            Table.Signature'Valid'Image);
+            end;
+         end loop;
+         End_Section;
       end if;
    end if;
    --  ACPI End
    End_Section;
-   Put_Line ("PS/2 initialization");
+   --  Put_Line ("PS/2 initialization");
    Begin_Section;
    --  PS/2
    --  Initialize USB
@@ -82,11 +116,11 @@ begin
    --  Perform interface tests
    --  Enable Dev
    --  Reset Dev
-   if System.PS2.Read_Controller_Configuration.POST_OK then
-      Status_Line (OK, "POST from PS/2 is OK");
-   else
-      Status_Line (ERROR, "Erroneous state. POST from PS/2 is BAD");
-   end if;
+   --  if System.PS2.Read_Controller_Configuration.POST_OK then
+      --  Status_Line (OK, "POST from PS/2 is OK");
+   --  else
+      --  Status_Line (ERROR, "Erroneous state. POST from PS/2 is BAD");
+   --  end if;
    --  PS/2 End
    End_Section;
    --  System initialization END
