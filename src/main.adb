@@ -99,11 +99,12 @@ begin
             end;
          end loop;
          End_Section;
+         Status_Line (OK, "ACPI ready for use");
       end if;
    end if;
    --  ACPI End
    End_Section;
-   --  Put_Line ("PS/2 initialization");
+   Put_Line ("PS/2 initialization");
    Begin_Section;
    --  PS/2
    --  Initialize USB
@@ -116,11 +117,11 @@ begin
    --  Perform interface tests
    --  Enable Dev
    --  Reset Dev
-   --  if System.PS2.Read_Controller_Configuration.POST_OK then
-      --  Status_Line (OK, "POST from PS/2 is OK");
-   --  else
-      --  Status_Line (ERROR, "Erroneous state. POST from PS/2 is BAD");
-   --  end if;
+   if System.PS2.Read_Controller_Configuration.POST_OK then
+      Status_Line (OK, "POST from PS/2 is OK");
+   else
+      Status_Line (ERROR, "Erroneous state. POST from PS/2 is BAD");
+   end if;
    --  PS/2 End
    End_Section;
    --  System initialization END

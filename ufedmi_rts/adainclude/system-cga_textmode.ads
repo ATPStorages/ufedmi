@@ -62,6 +62,10 @@ package System.CGA_TextMode is
    Foreground_Color : Color := (True, WHITE);
    Background_Color : Color := (False, BLACK);
 
+   procedure Move_All_Y
+      (Positions : Integer;
+       Background : Color := Background_Color);
+
    procedure New_Line;
 
    procedure Put_Char

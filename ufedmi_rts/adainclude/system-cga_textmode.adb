@@ -1,12 +1,30 @@
 package body System.CGA_TextMode is
 
+   procedure Move_All_Y
+      (Positions : Integer;
+       Background : Color := Background_Color)
+   is
+      Absolute : Natural;
+   begin
+      Y := Y - (Positions + 1);
+      for R in Row'Range loop
+         Absolute := (R * COLS) + COLS;
+         if R = Row'Last then
+            Output (Absolute - COLS .. Absolute) :=
+               (others => (' ', Background, Background));
+         else
+            Output (Absolute - COLS .. Absolute) :=
+               Output (Absolute .. Absolute + COLS);
+         end if;
+      end loop;
+   end Move_All_Y;
+
    procedure New_Line is
    begin
       X := C;
       Y := Y + 1;
       if Y > ROWS then
-         Clear;
-         Y := 0;
+         Move_All_Y (1);
       end if;
    end New_Line;
 
