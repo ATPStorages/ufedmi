@@ -5,7 +5,12 @@ package System.Low_Level is
    pragma No_Elaboration_Code_All;
 
    type CPU_Pin is
-      (PS_2_DATA,
+      (PIC_CHANNEL_0_DATA,
+       PIC_CHANNEL_1_DATA,
+       PIC_CHANNEL_2_DATA,
+       PIC_COMMAND,
+       PS_2_DATA,
+       PC_SPEAKER,
        PS_2_REGISTER,
        CMOS_COMMAND,
        CMOS_DATA,
@@ -13,11 +18,16 @@ package System.Low_Level is
       with Size => 16;
 
    for CPU_Pin use
-      (PS_2_DATA     => 16#060#,
-       PS_2_REGISTER => 16#064#,
-       CMOS_COMMAND  => 16#070#,
-       CMOS_DATA     => 16#071#,
-       QEMU_SHUTDOWN => 16#604#);
+      (PIC_CHANNEL_0_DATA => 16#040#,
+       PIC_CHANNEL_1_DATA => 16#041#,
+       PIC_CHANNEL_2_DATA => 16#042#,
+       PIC_COMMAND        => 16#043#,
+       PS_2_DATA          => 16#060#,
+       PC_SPEAKER         => 16#061#,
+       PS_2_REGISTER      => 16#064#,
+       CMOS_COMMAND       => 16#070#,
+       CMOS_DATA          => 16#071#,
+       QEMU_SHUTDOWN      => 16#604#);
 
    type Segmented_Address is record
       Segment, Offset : Interfaces.Unsigned_16;

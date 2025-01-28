@@ -14,4 +14,8 @@ package Interfaces is
    type Unsigned_64 is mod 2 ** 64 with Size => 64;
    pragma Provide_Shift_Operators (Unsigned_64);
 
+   function Shift_Right (U : Unsigned_16; A : Natural) return Unsigned_16 with
+      Import,
+      Convention => Intrinsic;
+
 end Interfaces;
