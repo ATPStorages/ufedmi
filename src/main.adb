@@ -5,6 +5,7 @@ with System.RTC;
 with System.Timings;
 
 with Ada.Text_IO; use Ada.Text_IO;
+with System.Serial; use System.Serial;
 with System.Low_Level; use System.Low_Level;
 with System.CGA_TextMode; use System.CGA_TextMode;
 with System.ACPI.Structures; use System.ACPI.Structures;
@@ -19,6 +20,23 @@ begin
    Put_Line ("UFEDMI starting...");
    Begin_Section;
    --  System initialization
+   Put_Line ("COM / Serial Initialization");
+   Begin_Section;
+   --  COM / Serial
+   for Pin_No in COM_Pins'Range loop
+      declare
+         COM_Pin : CPU_Pin renames COM_Pins (Pin_No);
+         Init_OK : constant Boolean := Serial_Initialize (COM_Pin);
+      begin
+         Status_Line ((if Init_OK then OK Else WARNING), COM_Pin'Image);
+         if Ada.Text_IO.COM = NONE then
+            Ada.Text_IO.COM := COM_Pin;
+            Put_Line ("Logging on " & COM_Pin'Image);
+         end if;
+      end;
+   end loop;
+   --  COM / Serial End
+   End_Section;
    Put_Line ("Checking Real Time Clock");
    Begin_Section;
    --  RTC
@@ -58,7 +76,7 @@ begin
    if RSDP'Address = System.Null_Address then
       Status_Line (ERROR, "RSDP not found");
    else
-      Status_Line (OK, "RSDT Address :"  & RSDP.Rsdt_Address'Image);
+      Status_Line (OK, "RSDP RSDT Address :"  & RSDP.Rsdt_Address'Image);
       Put_Line    (    "RSDP Checksum:"  & RSDP.Checksum'Image);
       Put_Line    (    "RSDP OEM ID  : " & RSDP.OEM_ID);
       Put_Line    (    "RSDP Revision:"  & RSDP.Revision'Image);
@@ -66,7 +84,7 @@ begin
          Status_Line (OK, "XSDP Address :"  & XSDP.Xsdt_Address'Image);
          Put_Line    (    "XSDP Checksum:" & XSDP.Checksum'Image);
          Put_Line    (    "XSDP Length  :" & XSDP.Length'Image);
-         Put_Line ("Iterating over XSDP entries");
+         Put_Line ("Iterating over (" & Interfaces.Unsigned_32'Image ((SDT.Length - 36) / 8) & " ) XSDP entries");
          Begin_Section;
          for Index in 1 .. (SDT.Length - 36) / 8 loop
             Put (Index'Image & ": ");
@@ -83,7 +101,7 @@ begin
          end loop;
          End_Section;
       else
-         Put_Line ("Iterating over RSDP entries");
+         Put_Line ("Iterating over (" & Interfaces.Unsigned_32'Image ((SDT.Length - 36) / 4) & " ) RSDP entries");
          Begin_Section;
          for Index in 1 .. (SDT.Length - 36) / 4 loop
             Put (Index'Image & ": ");

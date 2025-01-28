@@ -5,3 +5,4 @@
 /ufedmi_rts/adaobj/*
 /ufedmi_rts/adalib/*
 /src/iso/boot/*.elf
+*.out

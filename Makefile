@@ -34,7 +34,7 @@ $(AOBJ_DIR)/%.o: $(ASM_DIR)/%.asm
 $(OUT_DIR)/main.elf: $(AOBJ_DIR)/*.o $(ADA_OBJS)
 	alr build
 	mv $(RTS_ODIR)/*.o $(RTS_DDIR)
-	ld -m elf_i386 -T $(ASM_DIR)/linker.ld -o '$@' $^ -z noexecstack -z noseparate-code -s
+	ld -m elf_i386 -T $(ASM_DIR)/linker.ld -o '$@' $^ -z noexecstack -z noseparate-code
 
 clean:
 	rm -rf $(OBJ_DIR)/*
@@ -44,7 +44,7 @@ clean:
 
 QEMU_FLAGS := -s -d int -no-reboot \
 			  -usb -usbdevice keyboard -usbdevice mouse -usbdevice tablet \
-			  -net none #\
+			  -net none -serial file:serial.out #\
 			  -drive if=pflash,format=raw,unit=0,file=./OVMF_CODE_4M.fd,readonly=on \
 			  -drive if=pflash,format=raw,unit=1,file=./OVMF_VARS_4M.fd
 

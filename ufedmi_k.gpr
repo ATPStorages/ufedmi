@@ -23,11 +23,11 @@ project Ufedmi_K is
          "-Wextra",
          "-gnatp",
          
-         "-Os",
-         "-s",
-         "-nostdlib",
-         "-fno-ident",
-         "-fno-asynchronous-unwind-tables"
+         "-O0",
+         "-g3",
+         "-mgeneral-regs-only",
+         "-mno-red-zone",
+         "-march=pentium"
       );
    end Compiler;
 
