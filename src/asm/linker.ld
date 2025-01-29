@@ -20,4 +20,8 @@ SECTIONS
     *(.bss)
     ebss = .;
   }
+  . = 0x00000500;
+  .kernel : {
+    *(.kernel)
+  }
 }

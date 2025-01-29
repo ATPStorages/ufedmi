@@ -2,6 +2,8 @@ package Interfaces is
    pragma Pure;
    pragma No_Elaboration_Code_All;
 
+   type Unsigned_2 is mod 2 ** 2 with Size => 2;
+
    type Unsigned_4 is mod 2 ** 4 with Size => 4;
 
    type Unsigned_8 is mod 2 ** 8 with Size => 8;

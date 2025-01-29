@@ -14,12 +14,12 @@ package System.Memory is
       Limit        : Interfaces.Unsigned_20;
    end record with Size => 64, Pack;
 
-   type Segment_Descriptor_Table is array (Positive range <>) of
+   type Segment_Descriptor_Table is array (Natural range <>) of
       Segment_Descriptor;
 
    procedure Write_Segment_Descriptor
       (Descriptor : Segment_Descriptor;
-       Addr : Address);
+       Addr       : Address);
 
    function Allocate (Length : Integer_Address) return Address with
       Export,

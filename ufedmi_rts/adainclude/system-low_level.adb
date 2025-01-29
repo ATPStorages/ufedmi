@@ -85,7 +85,7 @@ package body System.Low_Level is
    end Read_Control_Register_0;
 
    procedure Set_Global_Descriptor_Table
-      (Register : Global_Descriptor_Register)
+      (Register : Descriptor_Register)
    is
    begin
       Asm ("mov %1, 0x7C00" & LF & HT &
@@ -96,16 +96,46 @@ package body System.Low_Level is
            Volatile => True);
    end Set_Global_Descriptor_Table;
 
-   function Get_Global_Descriptor_Register
-      return Global_Descriptor_Register
+   procedure Set_Interrupt_Descriptor_Table
+      (Register : Descriptor_Register)
    is
-      Register : Global_Descriptor_Register;
+   begin
+      Asm ("mov %1, 0x7C00" & LF & HT &
+           "mov %0, 0x7C02" & LF & HT &
+           "lidt 0x7C00",
+           Inputs   => (Unsigned_32'Asm_Input ("r", Register.Addr),
+                        Unsigned_16'Asm_Input ("r", Register.Limit)),
+           Volatile => True);
+   end Set_Interrupt_Descriptor_Table;
+
+   function Get_Global_Descriptor_Register
+      return Descriptor_Register
+   is
+      Register : Descriptor_Register;
    begin
       Asm ("sgdt %0",
-           Outputs  => Global_Descriptor_Register'Asm_Output ("=m", Register),
+           Outputs  => Descriptor_Register'Asm_Output ("=m", Register),
            Volatile => True);
       return Register;
    end Get_Global_Descriptor_Register;
+
+   function Get_Interrupt_Descriptor_Register
+      return Descriptor_Register
+   is
+      Register : Descriptor_Register;
+   begin
+      Asm ("sidt %0",
+           Outputs  => Descriptor_Register'Asm_Output ("=m", Register),
+           Volatile => True);
+      return Register;
+   end Get_Interrupt_Descriptor_Register;
+
+   procedure Refresh_Global_Descriptor_Table is
+   begin
+      Asm ("jmp $0x08,$far" & LF & HT &
+           "far:",
+           Volatile => True);
+   end Refresh_Global_Descriptor_Table;
 
    procedure Raise_Division_Error is
    begin
@@ -113,5 +143,11 @@ package body System.Low_Level is
            "div %%ecx",
            Volatile => True);
    end Raise_Division_Error;
+
+   procedure Raise_Invalid_Opcode_Error is
+   begin
+      Asm ("ud2",
+           Volatile => True);
+   end Raise_Invalid_Opcode_Error;
 
 end System.Low_Level;

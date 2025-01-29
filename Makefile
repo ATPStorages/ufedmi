@@ -25,13 +25,15 @@ ADA_FILES := $(wildcard $(SRC_DIR)/*.ad*)
 RTS_FILES := $(wildcard $(RTS_DIR)/*.ad*)
 ADA_OBJS := $(patsubst $(SRC_DIR)/%.adb,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/%.ads,$(OBJ_DIR)/%.o,$(ADA_FILES))) \
 			$(patsubst $(RTS_DIR)/%.adb,$(RTS_DDIR)/%.o,$(patsubst $(RTS_DIR)/%.ads,$(RTS_DDIR)/%.o,$(RTS_FILES)))
+ASM_FILES := $(wildcard $(ASM_DIR)/*.asm)
+ASM_OBJS := $(patsubst $(ASM_DIR)/%.asm,$(AOBJ_DIR)/%.o,$(ASM_FILES))
 
 $(ADA_OBJS):
 
 $(AOBJ_DIR)/%.o: $(ASM_DIR)/%.asm
 	nasm -f elf32 -O0 -Ov  $< -o $@
 
-$(OUT_DIR)/main.elf: $(AOBJ_DIR)/entry.o $(AOBJ_DIR)/intrpt_default_handler.o $(ADA_OBJS)
+$(OUT_DIR)/main.elf: $(ASM_OBJS) $(ADA_OBJS)
 	alr build
 	mv $(RTS_ODIR)/*.o $(RTS_DDIR)
 	ld -m elf_i386 -T $(ASM_DIR)/linker.ld -o '$@' $^ -z noexecstack -z noseparate-code

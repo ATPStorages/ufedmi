@@ -106,17 +106,27 @@ package System.Low_Level is
 
    function Read_Control_Register_0 return Control_Register_0;
 
-   type Global_Descriptor_Register is record
+   type Descriptor_Register is record
       Limit : Unsigned_16;
       Addr  : Unsigned_32;
    end record with Pack, Size => 48;
 
    procedure Set_Global_Descriptor_Table
-      (Register : Global_Descriptor_Register) with Inline_Always;
+      (Register : Descriptor_Register) with Inline_Always;
+
+   procedure Set_Interrupt_Descriptor_Table
+      (Register : Descriptor_Register) with Inline_Always;
 
    function Get_Global_Descriptor_Register
-      return Global_Descriptor_Register with Inline_Always;
+      return Descriptor_Register with Inline_Always;
 
-   procedure Raise_Division_Error;
+   function Get_Interrupt_Descriptor_Register
+      return Descriptor_Register with Inline_Always;
+
+   procedure Refresh_Global_Descriptor_Table;
+
+   procedure Raise_Division_Error with Inline_Always;
+
+   procedure Raise_Invalid_Opcode_Error with Inline_Always;
 
 end System.Low_Level;

@@ -8,6 +8,7 @@ with System.Timings;
 with Ada.Text_IO; use Ada.Text_IO;
 with System.Memory; use System.Memory;
 with System.Serial; use System.Serial;
+with Ada.Interrupts; use Ada.Interrupts;
 with System.Low_Level; use System.Low_Level;
 with System.CGA_TextMode; use System.CGA_TextMode;
 with System.ACPI.Structures; use System.ACPI.Structures;
@@ -193,43 +194,81 @@ begin
    Begin_Section;
    --  GDT
    declare
-      GDT : Segment_Descriptor_Table (1 .. 4) with Address =>
-         To_Address (16#00000500#);
+      GDT : Segment_Descriptor_Table (0 .. 3) with Address =>
+         To_Address (16#0007FFFF# - 16#800# - 16#20#);
       use type Interfaces.Unsigned_20;
       use type Interfaces.Unsigned_16;
    begin
       Put_Line ("Writing to" & GDT'Address'Image &
                 ", array length" & Integer (GDT'Length)'Image);
-      GDT (1) := Segment_Descriptor'(Base         => 0,
-                                     Limit        => 0,
-                                     Access_Flags => 0,
-                                     Flags        => 0);
-      GDT (2) := Segment_Descriptor'(Base         => 16#00400000#,
-                                     Limit        => 16#000FFFFF#,
-                                     Access_Flags => 16#9A#,
-                                     Flags        => 16#C#);
-      GDT (3) := Segment_Descriptor'(Base         => 16#004FFFFF#,
-                                     Limit        => 16#000FFFFF#,
-                                     Access_Flags => 16#92#,
-                                     Flags        => 16#C#);
-      GDT (4) := Segment_Descriptor'(Base         =>
-                                      Interfaces.Unsigned_32
-                                       (To_Integer (GDT (4)'Address)),
-                                     Limit        =>
-                                      (Segment_Descriptor'Size / 8) - 1,
-                                     Access_Flags => 16#89#,
-                                     Flags        => 16#0#);
+      Write_Segment_Descriptor
+         (Segment_Descriptor'(Base         => 0,
+                              Limit        => 0,
+                              Access_Flags => 0,
+                              Flags        => 0),
+          GDT (0)'Address);
+      Write_Segment_Descriptor
+         (Segment_Descriptor'(Base         => 16#00000500#,
+                              Limit        => 16#000076FF#,
+                              Access_Flags => 16#9A#,
+                              Flags        => 16#C#),
+          GDT (1)'Address);
+      Write_Segment_Descriptor
+         (Segment_Descriptor'(Base         => 16#00000500#,
+                              Limit        => 16#000076FF#,
+                              Access_Flags => 16#92#,
+                              Flags        => 16#C#),
+          GDT (2)'Address);
+      Write_Segment_Descriptor
+         (Segment_Descriptor'(Base         => Interfaces.Unsigned_32
+                                 (To_Integer (GDT (3)'Address)),
+                              Limit        =>
+                                 (Segment_Descriptor'Size / 8) - 1,
+                              Access_Flags => 16#89#,
+                              Flags        => 16#0#),
+          GDT (3)'Address);
       Set_Global_Descriptor_Table
          ((GDT'Size / 8, Interfaces.Unsigned_32 (To_Integer (GDT'Address))));
       declare
-         GDR : constant Global_Descriptor_Register :=
-            Get_Global_Descriptor_Register;
+         GDR : constant Descriptor_Register := Get_Global_Descriptor_Register;
       begin
-         Put_Line ("GDT now present at address" & GDR.Addr'Image &
+         Put_Line ("GDT present at address" & GDR.Addr'Image &
                    ", limited to" & GDR.Limit'Image & " bytes.");
       end;
    end;
    --  GDT End
+   End_Section;
+   Put_Line ("Interrupt descriptor table initialization");
+   Begin_Section;
+   --  IDT
+   declare
+      IDT : Interrupt_Descriptor_Table (0 .. 255) with Address =>
+         To_Address (16#0007FFFF# - 16#800#);
+      use type Interfaces.Unsigned_16;
+   begin
+      Put_Line ("Writing to" & IDT'Address'Image &
+                ", array length" & Integer (IDT'Length)'Image);
+      for Index in IDT'Range loop
+         Write_Interrupt_Gate_Descriptor
+            (Interrupt_Gate_Descriptor'(Offset           => 0,
+                                        Segment_Selector => 16#8#,
+                                        Gate_Type        => TRAP_GATE_32,
+                                        Permission_Level => 0,
+                                        Present          => True),
+             IDT (Index)'Address);
+      end loop;
+      Set_Interrupt_Descriptor_Table
+         ((IDT'Size / 8, Interfaces.Unsigned_32 (To_Integer (IDT'Address))));
+      declare
+         IDT : constant Descriptor_Register :=
+            Get_Interrupt_Descriptor_Register;
+      begin
+         Put_Line ("IDT present at address" & IDT.Addr'Image &
+                   ", with" & IDT.Limit'Image & " bytes.");
+      end;
+   end;
+   Enable_Interrupts;
+   --  IDT End
    End_Section;
    End_Section;
    Put_Line ("System initialization complete");

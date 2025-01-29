@@ -1,5 +1,6 @@
-with System.Low_Level;
-with System.Storage_Elements;
+with Interfaces;
+with System;
+
 package Ada.Interrupts is
    pragma Preelaborate;
    pragma No_Elaboration_Code_All;
@@ -45,10 +46,34 @@ package Ada.Interrupts is
        MACHINE_CHECK               => 16#12#,
        SIMD_FLOATING_POINT_ERROR   => 16#13#);
 
-   type Interrupt_Vector_Array is array (0 .. 255) of
-      System.Low_Level.Segmented_Address with
-         Size => 8192;
-   Interrupt_Vector_Table : Interrupt_Vector_Array with
-         Address => System.Storage_Elements.To_Address (0);
+   type IGD_Gate_Type is
+      (TASK_GATE,
+       INTERRUPT_GATE_16,
+       TRAP_GATE_16,
+       INTERRUPT_GATE_32,
+       TRAP_GATE_32)
+      with Size => 4;
+
+   for IGD_Gate_Type use
+      (TASK_GATE         => 2#0101#,
+       INTERRUPT_GATE_16 => 2#0110#,
+       TRAP_GATE_16      => 2#0111#,
+       INTERRUPT_GATE_32 => 2#1110#,
+       TRAP_GATE_32      => 2#1111#);
+
+   type Interrupt_Gate_Descriptor is record
+      Offset           : Interfaces.Unsigned_32;
+      Segment_Selector : Interfaces.Unsigned_16;
+      Gate_Type        : IGD_Gate_Type;
+      Permission_Level : Interfaces.Unsigned_2;
+      Present          : Boolean;
+   end record with Size => 64, Pack;
+
+   type Interrupt_Descriptor_Table is array (Natural range <>) of
+      Interrupt_Gate_Descriptor;
+
+   procedure Write_Interrupt_Gate_Descriptor
+      (Descriptor : Interrupt_Gate_Descriptor;
+       Addr       : System.Address);
 
 end Ada.Interrupts;
